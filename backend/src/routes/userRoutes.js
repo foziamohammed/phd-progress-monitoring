@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const authorizeRoles = require("../middlewares/roleMiddleware")
+const authorizeRoles = require("../middlewares/roleMiddleware");
+const studentApporval = require('../utils/studentApproval');
 const { verifyToken } = require('../middlewares/authMiddleware');
 
 router.get('/student', verifyToken, authorizeRoles("student"), (req, res) => {
@@ -21,5 +22,6 @@ router.get('/dean', verifyToken, authorizeRoles("dean"), (req, res) => {
 router.get('/PGdirector', verifyToken, authorizeRoles("PGdirector"), (req, res) => {
     res.json({ message: "PGdirector" });
 });
+router.put('/approve/:id', verifyToken, authorizeRoles("advisor"), studentApporval);
 
 module.exports = router;

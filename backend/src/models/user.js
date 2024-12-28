@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please add a phone number"],
         unique: true,
     },
+    isApproved: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
