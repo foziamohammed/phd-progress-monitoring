@@ -14,12 +14,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, "Please add a password"],
-        unique: true,
     },
     role: {
         type: String,
         enum: ["student", "advisor", "PGcoordinator", "chair", "dean", "PGdirector", "admin"],
-        default: "user",
+        default: "student",
     },
     phone: {
         type: String,
