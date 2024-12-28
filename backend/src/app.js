@@ -15,7 +15,7 @@ app.use(express.json());
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/milestones', milestoneRoutes); TODO // fix this route
+app.use('/api/milestones', milestoneRoutes); 
 
 //Start the server
 const PORT = process.env.PORT;

@@ -21,11 +21,11 @@ const verifyToken = async (req, res, next) => {
 const auth = async (req, res, next) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
-        console.log("Token:", token)  
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded:", decoded)  
         const user = await User.findOne({ _id: decoded.id });
-        console.log("User:", user)
 
         if (!user) {
             throw new Error();
@@ -35,5 +35,7 @@ const auth = async (req, res, next) => {
         next();
     } catch (error) {
         res.status(401).json({ message: "Please authenticate." });
-    }}
-module.exports = verifyToken, auth;
+    }
+};
+
+module.exports = { verifyToken, auth };
