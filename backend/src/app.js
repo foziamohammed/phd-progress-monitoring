@@ -4,6 +4,7 @@ const connectDB = require('./config/connectDB');
 const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoutes');
 const milestoneRoutes = require('./routes/milestoneRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 connectDB();
 const app = express();
@@ -15,7 +16,8 @@ app.use(express.json());
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/milestones', milestoneRoutes); 
+app.use('/api/milestones', milestoneRoutes);
+app.use('/api/reports', reportRoutes);
 
 //Start the server
 const PORT = process.env.PORT;

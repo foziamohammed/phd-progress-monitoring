@@ -6,6 +6,12 @@ const studentApporval = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+        if (user.role !== "student") {
+            return res.status(400).json({ message: "User is not a student" });
+        }
+        if (user.isApproved) {
+            return res.status(400).json({ message: "User is already approved" });
+        }
         user.isApproved = true;
         await user.save();
         res.status(200).json({ message: "User approved successfully" });
