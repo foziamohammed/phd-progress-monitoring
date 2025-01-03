@@ -44,4 +44,32 @@ const approveReportByDean = async (req, res) => {
     }
 };
 
-module.exports = { submitReport, approveReportByAdvisor, approveReportByDean };
+const getPendingReportsForAdvisor = async (req, res) => {
+    try {
+        const reports = await Report.find({ 
+            status: "pending"
+        }).populate('studentId', 'name email');
+        res.status(200).json({ reports });
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong." });
+    }
+};
+
+const getPendingReportsForDean = async (req, res) => {
+    try {
+        const reports = await Report.find({ 
+            status: "approvedByAdvisor"
+        }).populate('studentId', 'name email');
+        res.status(200).json({ reports });
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong." });
+    }
+};
+
+module.exports = { 
+    submitReport, 
+    approveReportByAdvisor, 
+    approveReportByDean,
+    getPendingReportsForAdvisor,
+    getPendingReportsForDean 
+};
