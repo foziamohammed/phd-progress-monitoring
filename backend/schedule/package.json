@@ -1,0 +1,21 @@
+{
+  "name": "spm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.8.4",
+    "nodemailer": "^6.9.16",
+    "nodemon": "^3.1.7"
+  }
+}
