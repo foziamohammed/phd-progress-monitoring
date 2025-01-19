@@ -20,7 +20,23 @@ const DocumentTable = () => {
       setUploadedFileName(file.name);
     }
   };
+   const handleSubmit = () => {
+    if (!submittedFile || dropdownPlaceholder === "Select document type") {
+      alert("Please select a document type and upload a file before submitting.");
+      return;
+    }
 
+    // Simulating a submission process
+    console.log("Submitting file:", submittedFile.name);
+    console.log("Document type:", dropdownPlaceholder);
+
+    // Reset the state after submission
+    setUploadedFileName("");
+    setSubmittedFile(null);
+    setDropdownPlaceholder("Select document type");
+
+    alert("File submitted successfully!");
+  };
   return (
     <div className="p-6">
       {/* Dropdown and Upload Button */}
@@ -111,7 +127,14 @@ const DocumentTable = () => {
           Uploaded file: <span className="font-medium">{uploadedFileName}</span>
         </p>
       )}
-
+      <div className="mb-4">
+        <button
+          className="rounded bg-blue-300 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
+      </div>
       {/* Table Section */}
       <div>
         <h2 className="mb-2 text-lg font-semibold">All files</h2>
