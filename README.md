@@ -34,25 +34,3 @@ PPMoS/
 ├── docs/              # Documentation and design files
 └── README.md          # Project README file
 ```
-## Installation
-
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/foziamohammed/phd-progress-monitoring.git
-    cd PPMoS
-    ```
-2. Install dependencies:
-    ```bash
-    # Example for Node.js backend
-    npm install
-    ```
-3. Configure environment variables:
-    - Create a `.env` file in the root directory.
-    - Specify the necessary configurations (e.g., database credentials, API keys).
-
-4. Run the application:
-    ```bash
-    # Example for starting a development server
-    npm run dev
-    ```
-
