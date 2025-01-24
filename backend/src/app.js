@@ -7,6 +7,8 @@ const userRoutes = require('./routes/userRoutes');
 const milestoneRoutes = require('./routes/milestoneRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const gradeRoutes = require('./routes/gradeRoutes');
+const meetingRoutes = require('./routes/meetingRoutes');
+
 
 connectDB();
 const app = express();
@@ -21,6 +23,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/milestones', milestoneRoutes);
 app.use('/api/grades', gradeRoutes);
+app.use('/api/meetings', meetingRoutes);
 app.use('/api/reports', noteRoutes);
 
 //Start the server
