@@ -5,7 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoutes');
 const milestoneRoutes = require('./routes/milestoneRoutes');
-const reportRoutes = require('./routes/noteRoutes');
+const noteRoutes = require('./routes/noteRoutes');
 const gradeRoutes = require('./routes/gradeRoutes');
 
 connectDB();
@@ -20,8 +20,8 @@ app.use(cors());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/milestones', milestoneRoutes);
-app.use('/api/reports', reportRoutes);
 app.use('/api/grades', gradeRoutes);
+app.use('/api/reports', noteRoutes);
 
 //Start the server
 const PORT = process.env.PORT;
