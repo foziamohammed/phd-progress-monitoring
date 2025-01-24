@@ -1,32 +1,55 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Navbar from './components/Navbar'
-import Home from './pages/home'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar'; 
+import Home from './pages/home';
 import Issues from './pages/issues';
-import Meeting from './pages/meeting'
+import Meeting from './pages/meeting';
 import MilestoneProgress from './pages/milestones';
-function App() {
+import AdvisorHome from './pages/advisor/advisorHome';
+import AdvisorMeeting from './pages/advisor/advisorMeeting';
+import AdvisorStudents from './pages/advisor/advisorStudents';
+import AdvisorNavbar from './components/advisorNavbar';
+import StudentDetails from './pages/student/studentDetails';
+import AdvisorReport from './pages/advisor/advisorReport';
 
+function App() {
+  const [role, setRole] = useState('advisor'); // Dynamically set this role (e.g., after login)
 
   return (
     <Router>
-    <div className='min-h-screen'>
-        <Navbar></Navbar>
-        
+      <div className='min-h-screen'>
+        {/* Render Navbar based on role */}
+        {role === 'student' && <Navbar />}
+        {role === 'advisor' && <AdvisorNavbar />}
+
         <div className='p-20'>
           <Routes>
-          <Route path="/" element={<Home />} />
-            <Route path="/issues" element={<Issues />} />
-            <Route path="/meeting" element={<Meeting />} />
-            <Route path="/milestones" element={<MilestoneProgress />} />
-          </Routes></div>
-    </div>
+            {/* Routes for student */}
+            {role === 'student' && (
+              <>
+                <Route path="/" element={<Home />} />
+                <Route path="/issues" element={<Issues />} />
+                <Route path="/meeting" element={<Meeting />} />
+                <Route path="/milestones" element={<MilestoneProgress />} />
+                
+              </>
+            )}
+
+            {/* Routes for advisor */}
+            {role === 'advisor' && (
+              <>
+                <Route path="/" element={<AdvisorHome />} />
+                <Route path="/advisor/meeting" element={<AdvisorMeeting />} />
+                <Route path="/advisor/students" element={<AdvisorStudents />} />
+                <Route path="/advisor/student-details/:studentId" element={<StudentDetails />} />
+                <Route path="/advisor/document" element={<AdvisorReport />} />
+              </>
+            )}
+          </Routes>
+        </div>
+      </div>
     </Router>
-    
-    
-   
-   
-  )
+  );
 }
 
-export default App
+export default App;
