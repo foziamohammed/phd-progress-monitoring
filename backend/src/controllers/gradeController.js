@@ -1,9 +1,8 @@
 const Grade = require("../models/grade");
 const multer = require("multer");
-const mime = require("mime-types");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
+ 
 const submitGrade = async (req, res) => {
     try {
         if (!req.file) {

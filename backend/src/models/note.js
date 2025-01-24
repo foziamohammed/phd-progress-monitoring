@@ -1,19 +1,18 @@
 const mongoose = require("mongoose");
 
-const reportSchema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema({
     studentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    fileUrl: {
-        type: String,
+    file: {
+        type: Buffer,
         required: true,
     },
-    status: {
+    mimeType: {
         type: String,
-        enum: ["pending", "approvedByAdvisor", "approvedByDean"],
-        default: "pending",
+        required: true,
     },
     createdAt: {
         type: Date,
@@ -21,5 +20,5 @@ const reportSchema = new mongoose.Schema({
     },
 });
 
-const Report = mongoose.model("Report", reportSchema);
-module.exports = Report;
+const Note = mongoose.model("Note", noteSchema);
+module.exports = Note;

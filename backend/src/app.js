@@ -24,7 +24,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/milestones', milestoneRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/meetings', meetingRoutes);
-app.use('/api/reports', noteRoutes);
+app.use('/api/notes', noteRoutes);
 
 //Start the server
 const PORT = process.env.PORT;
