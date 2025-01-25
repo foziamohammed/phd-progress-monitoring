@@ -6,6 +6,10 @@ const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoutes');
 const milestoneRoutes = require('./routes/milestoneRoutes');
 const noteRoutes = require('./routes/noteRoutes');
+const progressRoutes = require('./routes/progressRoutes');
+const proposalRoutes = require('./routes/proposalRoutes');
+const publicationRoutes = require('./routes/publicationRoutes');
+const dissertationRoutes = require('./routes/dissertationRoutes');
 const gradeRoutes = require('./routes/gradeRoutes');
 const meetingRoutes = require('./routes/meetingRoutes');
 
@@ -25,6 +29,10 @@ app.use('/api/milestones', milestoneRoutes);
 app.use('/api/grades', gradeRoutes);
 app.use('/api/meetings', meetingRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/proposals', proposalRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/publications', publicationRoutes);
+app.use('/api/dissertations', dissertationRoutes);
 
 //Start the server
 const PORT = process.env.PORT;
