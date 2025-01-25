@@ -46,9 +46,34 @@ const approveByAdvisor = async (req, res) => {
     }
 };
 
-const getResults = async (req, res) => {
+const evaluateDissertation = async (req, res) => {
     try {
-        const results = await Dissertation.find({ status: "approvedByAdvisor" });
+        const dissertation = await Dissertation.findById(req.params.id);
+        if (!dissertation) {
+            return res.status(404).json({ message: "Dissertation not found" });
+        }
+
+        const { result } = req.body;
+        if (!result) {
+            return res.status(400).json({ message: "Result is required" });
+        }
+
+        dissertation.result = result;
+        await dissertation.save();
+        res.status(200).json({ message: "Dissertation result updated", dissertation });
+    } catch (error) {
+        console.error("Error evaluating dissertation:", error);
+        res.status(500).json({ message: "Something went wrong." });
+    }
+};
+
+const getResult = async (req, res) => {
+    try {
+        const dissertation = await Dissertation.findById(req.params.id);
+        if (!dissertation) {
+            return res.status(404).json({ message: "Dissertation not found" });
+        }
+        const results = dissertation.result;
         res.status(200).json({ results });
     } catch (error) {
         res.status(500).json({ message: "Something went wrong." });
@@ -56,7 +81,8 @@ const getResults = async (req, res) => {
 }
 module.exports = {
     submitDissertation: [upload.single('file'), submitDissertation],
+    getResult,
     getDissertationFile,
     approveByAdvisor,
-    getResults
+    evaluateDissertation
 };
