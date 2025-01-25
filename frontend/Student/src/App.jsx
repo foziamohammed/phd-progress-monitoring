@@ -31,7 +31,7 @@ function App() {
                 <Route path="/issues" element={<Issues />} />
                 <Route path="/meeting" element={<Meeting />} />
                 <Route path="/milestones" element={<MilestoneProgress />} />
-                
+                <Route path="/report" element={<DocumentTable />} />
               </>
             )}
 
@@ -43,6 +43,7 @@ function App() {
                 <Route path="/advisor/students" element={<AdvisorStudents />} />
                 <Route path="/advisor/student-details/:studentId" element={<StudentDetails />} />
                 <Route path="/advisor/document" element={<AdvisorReport />} />
+                <Route path="/milestone_form" element={<AddMilestone />} />
               </>
             )}
           </Routes>
