@@ -5,11 +5,9 @@ const examSchema = new Schema({
     studentId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
     },
-    examinationDate: {
+    examDate: {
         type: Date,
-        required: true
     },
     status: {
         type: String,
@@ -18,6 +16,6 @@ const examSchema = new Schema({
     },
 });
 
-const Examination = mongoose.model('Exam', examSchema);
+const Exam = mongoose.model('Exam', examSchema);
 
 module.exports = Exam;

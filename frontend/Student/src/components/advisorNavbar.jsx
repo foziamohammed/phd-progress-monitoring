@@ -32,6 +32,9 @@ const Navbar = () => {
             <Link to="/advisor/document" className="text-gray-700 hover:text-blue-600 text-xl">
               Document
             </Link>
+            <Link to="/milestone_form" className="text-blue-700 hover:text-blue-600 text-xl">
+              Milestone Form
+            </Link>
             
           </div>
 

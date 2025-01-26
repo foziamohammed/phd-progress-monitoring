@@ -25,9 +25,6 @@ const Navbar = () => {
             <Link to="/milestones" className="text-gray-700 hover:text-blue-600">
               Milestones
             </Link>
-            <Link to="/document" className="text-gray-700 hover:text-blue-600">
-              Document
-            </Link>
             <Link to="/meeting" className="text-gray-700 hover:text-blue-600">
               Meeting
             </Link>
