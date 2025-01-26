@@ -11,9 +11,10 @@ import Issues from './pages/issues';
 import Meeting from './pages/meeting';
 import MilestoneProgress from './pages/milestones';
 import StudentDetails from './pages/student/studentDetails';
+import Report from './pages/report'; 
 
 function App() {
-  const [role, setRole] = useState('advisor'); // Dynamically set this role (e.g., after login)
+  const [role, setRole] = useState('student'); // Set role to 'student'
 
   return (
     <Router>
@@ -27,23 +28,20 @@ function App() {
             {/* Routes for student */}
             {role === 'student' && (
               <>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Report />} /> {/* Set initial route to Report */}
                 <Route path="/issues" element={<Issues />} />
                 <Route path="/meeting" element={<Meeting />} />
                 <Route path="/milestones" element={<MilestoneProgress />} />
-                <Route path="/report" element={<DocumentTable />} />
+                <Route path="/student-details" element={<StudentDetails />} />
               </>
             )}
-
             {/* Routes for advisor */}
             {role === 'advisor' && (
               <>
                 <Route path="/" element={<AdvisorHome />} />
-                <Route path="/advisor/meeting" element={<AdvisorMeeting />} />
-                <Route path="/advisor/students" element={<AdvisorStudents />} />
-                <Route path="/advisor/student-details/:studentId" element={<StudentDetails />} />
-                <Route path="/advisor/document" element={<AdvisorReport />} />
-                <Route path="/milestone_form" element={<AddMilestone />} />
+                <Route path="/advisor-meeting" element={<AdvisorMeeting />} />
+                <Route path="/advisor-report" element={<AdvisorReport />} />
+                <Route path="/advisor-students" element={<AdvisorStudents />} />
               </>
             )}
           </Routes>

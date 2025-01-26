@@ -31,7 +31,7 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/proposals', proposalRoutes);
-app.use('/api/progress', progressRoutes);
+app.use('/api/progresses', progressRoutes);
 app.use('/api/publications', publicationRoutes);
 app.use('/api/dissertations', dissertationRoutes);
 
