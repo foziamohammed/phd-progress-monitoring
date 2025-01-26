@@ -1,145 +1,161 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
-const advisorMeeting = () => {
-  const [tasks, setTasks] = useState(["", "", ""]); // Added 3 initial tasks
+const AdvisorMeeting = () => {
+  const { user } = useAuth()
+  const [pendingRequests, setPendingRequests] = useState([])
+  const [approvedMeetings, setApprovedMeetings] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleInputChange = (index, value) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[index] = value;
-    setTasks(updatedTasks);
-  };
+  // Fetch advisor's meeting data
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        setLoading(true)
+        const [requestsRes, schedulesRes] = await Promise.all([
+          fetch(`/api/advisors/${user.id}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }),
+          fetch(`/api/advisors/${user.id}/schedules`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          })
+        ])
+
+        const requestsData = await requestsRes.json()
+        const schedulesData = await schedulesRes.json()
+        
+        setPendingRequests(requestsData.requests || [])
+        setApprovedMeetings(schedulesData.schedules || [])
+      } catch (err) {
+        setError('Failed to load meetings')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user?.id) fetchMeetings()
+  }, [user.id])
+
+  const handleRequestAction = async (requestId, action) => {
+    try {
+      setLoading(true)
+      const res = await fetch(`/api/${requestId}/${action}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+
+      if (!res.ok) throw new Error(`Failed to ${action} request`)
+
+      // Refresh data after action
+      const [requestsRes, schedulesRes] = await Promise.all([
+        fetch(`/api/advisors/${user.id}`),
+        fetch(`/api/advisors/${user.id}/schedules`)
+      ])
+      
+      const requestsData = await requestsRes.json()
+      const schedulesData = await schedulesRes.json()
+      
+      setPendingRequests(requestsData.requests || [])
+      setApprovedMeetings(schedulesData.schedules || [])
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="p-8 font-sans">
-      {/* Top Section */}
+      {error && <div className="mb-4 text-red-500">{error}</div>}
+
       <div className="flex gap-12">
-        {/* Meeting Form */}
+        {/* Pending Requests Section */}
         <div className="w-1/2">
-          <h1 className="font-semibold mb-6 text-lg">Book a date for a meeting</h1>
-          <form className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <label htmlFor="supervisor" className="w-28 font-medium">
-                Supervisor:
-              </label>
-              <input
-                type="text"
-                id="supervisor"
-                className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
+          <h1 className="font-semibold mb-6 text-lg">Pending Meeting Requests</h1>
+          
+          {loading ? (
+            <div>Loading...</div>
+          ) : pendingRequests.length === 0 ? (
+            <div className="text-gray-500">No pending requests</div>
+          ) : (
+            <div className="space-y-4">
+              {pendingRequests.map(request => (
+                <div key={request._id} className="border rounded p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="font-medium">{request.studentName}</h3>
+                      <p className="text-sm text-gray-600">
+                        {new Date(request.dateTime).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleRequestAction(request._id, 'approve')}
+                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                      >
+                        Approve
+                      </button>
+                      <button
+                        onClick={() => handleRequestAction(request._id, 'decline')}
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Decline
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-sm"><strong>Agenda:</strong> {request.agenda}</p>
+                  <p className="text-sm"><strong>Place:</strong> {request.place}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="flex items-center space-x-4">
-              <label htmlFor="date" className="w-28 font-medium">
-                Date:
-              </label>
-              <input
-                type="date"
-                id="date"
-                className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <label htmlFor="time" className="w-28 font-medium">
-                Time:
-              </label>
-              <input
-                type="time"
-                id="time"
-                className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <label htmlFor="agenda" className="w-28 font-medium">
-                Agenda:
-              </label>
-              <input
-                type="text"
-                id="agenda"
-                className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <label htmlFor="place" className="w-28 font-medium">
-                Place:
-              </label>
-              <input
-                type="text"
-                id="place"
-                className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md shadow-md"
-            >
-              Request
-            </button>
-          </form>
+          )}
         </div>
 
-        {/* Tasks Section */}
-        <div className="bg-gray-100 p-4 rounded shadow-md w-1/3">
-          <div className="flex justify-between items-center mb-2">
-            <h1 className="font-semibold">Tasks</h1>
-            <button>
-              <img
-                src="https://img.icons8.com/ios/24/000000/edit--v1.png"
-                alt="edit"
-              />
-            </button>
-          </div>
-          <ol className="space-y-2 text-gray-600">
-            {tasks.map((task, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <span className="font-medium">{index + 1}.</span>
-                <input
-                  type="text"
-                  placeholder={`Task ${index + 1}`}
-                  value={task}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  className="border-b-2 w-full focus:outline-none focus:border-blue-400"
-                />
-              </li>
-            ))}
-          </ol>
+        {/* Approved Meetings Schedule */}
+        <div className="w-1/2">
+          <h1 className="font-semibold mb-6 text-lg">Approved Meetings Schedule</h1>
+          
+          {loading ? (
+            <div>Loading...</div>
+          ) : approvedMeetings.length === 0 ? (
+            <div className="text-gray-500">No scheduled meetings</div>
+          ) : (
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="py-2">Student</th>
+                  <th className="py-2">Date</th>
+                  <th className="py-2">Time</th>
+                  <th className="py-2">Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                {approvedMeetings.map(meeting => (
+                  <tr key={meeting._id} className="border-b">
+                    <td className="py-2">{meeting.studentName}</td>
+                    <td className="py-2">
+                      {new Date(meeting.dateTime).toLocaleDateString()}
+                    </td>
+                    <td className="py-2">
+                      {new Date(meeting.dateTime).toLocaleTimeString()}
+                    </td>
+                    <td className="py-2">{meeting.place}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-      </div>
-
-      {/* Booked Meetings */}
-      <div className="mt-12">
-        <h1 className="font-semibold mb-4 text-lg">Booked Meetings</h1>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-2">Advisor Name</th>
-              <th className="py-2">Date</th>
-              <th className="py-2">Time</th>
-              <th className="py-2">Place</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2">Jane Cooper</td>
-              <td className="py-2">13-Jan-2025</td>
-              <td className="py-2">09:00 am</td>
-              <td className="py-2">AAiT hall</td>
-            </tr>
-            <tr>
-              <td className="py-2">Floyd Miles</td>
-              <td className="py-2">24-Jan-2025</td>
-              <td className="py-2">08:00 am</td>
-              <td className="py-2">AAiT hall</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-
-export default advisorMeeting
+export default AdvisorMeeting
