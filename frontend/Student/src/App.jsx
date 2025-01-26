@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar'; 
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AdvisorNavbar from './components/advisorNavbar';
+import Navbar from './components/Navbar';
+import AdvisorHome from './pages/advisor/advisorHome';
+import AdvisorMeeting from './pages/advisor/advisorMeeting';
+import AdvisorReport from './pages/advisor/advisorReport';
+import AdvisorStudents from './pages/advisor/advisorStudents';
 import Home from './pages/home';
 import Issues from './pages/issues';
 import Meeting from './pages/meeting';
 import MilestoneProgress from './pages/milestones';
-import AdvisorHome from './pages/advisor/advisorHome';
-import AdvisorMeeting from './pages/advisor/advisorMeeting';
-import AdvisorStudents from './pages/advisor/advisorStudents';
-import AdvisorNavbar from './components/advisorNavbar';
 import StudentDetails from './pages/student/studentDetails';
-import AdvisorReport from './pages/advisor/advisorReport';
 
 function App() {
-  const [role, setRole] = useState('advisor'); // Dynamically set this role (e.g., after login)
+  const [role, setRole] = useState('student'); // Dynamically set this role (e.g., after login)
 
   return (
     <Router>

@@ -1,13 +1,81 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const Meeting = () => {
-  const [tasks, setTasks] = useState(["", "", ""]); // Added 3 initial tasks
+  const [tasks, setTasks] = useState(["", "", ""]);
+  const [formData, setFormData] = useState({
+    supervisor: "",
+    date: "",
+    time: "",
+    agenda: "",
+    place: "",
+  });
+  const [bookedMeetings, setBookedMeetings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch approved meetings for the student
+  useEffect(() => {
+    const fetchApprovedMeetings = async () => {
+      try {
+        console.log("Fetching approved meetings...");
+        const response = await axios.get("http://localhost:3000/api/meetings/students/student123/schedules");
+        console.log("Approved Meetings Response:", response.data);
+
+        // Ensure the response is an array
+        if (Array.isArray(response.data)) {
+          setBookedMeetings(response.data);
+        } else {
+          console.error("Unexpected API response format:", response.data);
+          setError("Failed to fetch approved meetings. Please try again later.");
+        }
+      } catch (error) {
+        console.error("Error fetching approved meetings:", error);
+        setError("Failed to fetch approved meetings. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApprovedMeetings();
+  }, []);
 
   const handleInputChange = (index, value) => {
     const updatedTasks = [...tasks];
     updatedTasks[index] = value;
     setTasks(updatedTasks);
   };
+
+  const handleFormChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const meetingData = {
+      studentName: "John Doe",
+      studentId: "student123",
+      instructorId: formData.supervisor,
+      dateTime: new Date(`${formData.date}T${formData.time}`).toISOString(),
+      agenda: formData.agenda,
+      place: formData.place,
+    };
+
+    try {
+      console.log("Sending meeting request...");
+      const response = await axios.post("http://localhost:3000/api/meetings/createmeeting", meetingData);
+      console.log("Meeting request sent:", response.data);
+      alert("Meeting request sent successfully!");
+      setFormData({ supervisor: "", date: "", time: "", agenda: "", place: "" });
+    } catch (error) {
+      console.error("Error sending meeting request:", error);
+      alert("Failed to send meeting request.");
+    }
+  };
+
+  console.log("Rendering Meeting component...");
 
   return (
     <div className="p-8 font-sans">
@@ -16,7 +84,7 @@ const Meeting = () => {
         {/* Meeting Form */}
         <div className="w-1/2">
           <h1 className="font-semibold mb-6 text-lg">Book a date for a meeting</h1>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="flex items-center space-x-4">
               <label htmlFor="supervisor" className="w-28 font-medium">
                 Supervisor:
@@ -24,7 +92,10 @@ const Meeting = () => {
               <input
                 type="text"
                 id="supervisor"
+                value={formData.supervisor}
+                onChange={handleFormChange}
                 className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
             </div>
 
@@ -35,7 +106,10 @@ const Meeting = () => {
               <input
                 type="date"
                 id="date"
+                value={formData.date}
+                onChange={handleFormChange}
                 className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
             </div>
 
@@ -46,7 +120,10 @@ const Meeting = () => {
               <input
                 type="time"
                 id="time"
+                value={formData.time}
+                onChange={handleFormChange}
                 className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
             </div>
 
@@ -57,7 +134,10 @@ const Meeting = () => {
               <input
                 type="text"
                 id="agenda"
+                value={formData.agenda}
+                onChange={handleFormChange}
                 className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
             </div>
 
@@ -68,7 +148,10 @@ const Meeting = () => {
               <input
                 type="text"
                 id="place"
+                value={formData.place}
+                onChange={handleFormChange}
                 className="border rounded px-2 py-1 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                required
               />
             </div>
 
@@ -112,30 +195,34 @@ const Meeting = () => {
       {/* Booked Meetings */}
       <div className="mt-12">
         <h1 className="font-semibold mb-4 text-lg">Booked Meetings</h1>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b text-left">
-              <th className="py-2">Advisor Name</th>
-              <th className="py-2">Date</th>
-              <th className="py-2">Time</th>
-              <th className="py-2">Place</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b">
-              <td className="py-2">Jane Cooper</td>
-              <td className="py-2">13-Jan-2025</td>
-              <td className="py-2">09:00 am</td>
-              <td className="py-2">AAiT hall</td>
-            </tr>
-            <tr>
-              <td className="py-2">Floyd Miles</td>
-              <td className="py-2">24-Jan-2025</td>
-              <td className="py-2">08:00 am</td>
-              <td className="py-2">AAiT hall</td>
-            </tr>
-          </tbody>
-        </table>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : bookedMeetings.length > 0 ? (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b text-left">
+                <th className="py-2">Advisor Name</th>
+                <th className="py-2">Date</th>
+                <th className="py-2">Time</th>
+                <th className="py-2">Place</th>
+              </tr>
+            </thead>
+            <tbody>
+              {bookedMeetings.map((meeting, index) => (
+                <tr key={index} className="border-b">
+                  <td className="py-2">{meeting.instructorId}</td>
+                  <td className="py-2">{new Date(meeting.dateTime).toLocaleDateString()}</td>
+                  <td className="py-2">{new Date(meeting.dateTime).toLocaleTimeString()}</td>
+                  <td className="py-2">{meeting.place}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No booked meetings found.</p>
+        )}
       </div>
     </div>
   );
