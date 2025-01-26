@@ -6,9 +6,6 @@ const router = express.Router();
 // POST: Create a new meeting request
 router.post('/createmeeting', meetingController.createMeetingRequest);
 
-// GET: Get meeting requests for a specific advisor
-router.get('/advisors/:advisorId', meetingController.getAdvisorRequests);
-
 // PUT: Approve a meeting request
 router.put('/:id/approve', meetingController.approveMeetingRequest);
 
@@ -22,6 +19,10 @@ router.get('/students/:studentId/schedules', meetingController.getStudentSchedul
 
 // Get all meeting requests for a student (approved/pending/declined)
 router.get('/students/:studentId/requests', meetingController.getStudentRequests);
+
+// Advisor routes
+router.get('/advisors/:advisorId', meetingController.getAdvisorRequests);
+router.get('/advisors/:advisorId/schedules', meetingController.getAdvisorSchedules);
 
 
 module.exports = router;
