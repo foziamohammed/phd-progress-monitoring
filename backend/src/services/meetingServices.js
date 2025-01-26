@@ -5,8 +5,8 @@ exports.createMeeting = async (meetingData) => {
     return await newRequest.save();
 };
 
-exports.getRequestsByInstructor = async (instructorId) => {
-    return await MeetingRequest.find({ instructorId });
+exports.getRequestsByAdvisor = async (advisorId) => {
+    return await MeetingRequest.find({ advisorId });
 };
 
 exports.approveRequest = async (id) => {

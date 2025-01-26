@@ -5,14 +5,14 @@ const sendEmail = require('../utils/email');  // import the email utility
 
 
 exports.createMeetingRequest = async (req, res) => {
-    const { studentName, studentId, instructorId, dateTime } = req.body;
+    const { studentName, studentId, advisorId, dateTime } = req.body;
 
-    if (!studentName || !studentId || !instructorId || !dateTime) {
+    if (!studentName || !studentId || !advisorId || !dateTime) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
     try {
-        const newRequest = await meetingService.createMeeting({ studentName, studentId, instructorId, dateTime });
+        const newRequest = await meetingService.createMeeting({ studentName, studentId, advisorId, dateTime });
         
         res.status(201).json({ message: 'Meeting request sent!', request: newRequest });
     } catch (error) {
@@ -21,11 +21,11 @@ exports.createMeetingRequest = async (req, res) => {
     }
 };
 
-exports.getInstructorRequests = async (req, res) => {
-    const { instructorId } = req.params;
+exports.getAdvisorRequests = async (req, res) => {
+    const { advisorId } = req.params;
 
     try {
-        const requests = await meetingService.getRequestsByInstructor(instructorId);
+        const requests = await meetingService.getRequestsByAdvisor(advisorId);
         res.status(200).json({ requests });
     } catch (error) {
         console.error('Error fetching meeting requests:', error);
@@ -64,19 +64,20 @@ exports.declineMeetingRequest = async (req, res) => {
 };
 
 
-// Get approved meetings for a specific instructor
-exports.getInstructorSchedules = async (req, res) => {
-    const { instructorId } = req.params;
+// Get approved meetings for a specific advisor
+
+exports.getAdvisorSchedules = async (req, res) => {
+    const { advisorId } = req.params;
 
     try {
-        const schedules = await MeetingRequest.find({ instructorId: instructorId, status: 'approved' });
+        const schedules = await MeetingRequest.find({ advisorId: advisorId, status: 'approved' });
         if (!schedules.length) {
-            return res.status(404).json({ message: 'No schedules found for this instructor.' });
+            return res.status(404).json({ message: 'No schedules found for this advisor.' });
         }
         res.status(200).json({ message: 'Schedules retrieved successfully.', schedules });
     } catch (err) {
-        console.error('Error retrieving instructor schedules:', err);
-        res.status(500).json({ message: 'Server error while retrieving instructor schedules.' });
+        console.error('Error retrieving advisor schedules:', err);
+        res.status(500).json({ message: 'Server error while retrieving advisor schedules.' });
     }
 };
 
