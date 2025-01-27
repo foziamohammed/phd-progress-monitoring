@@ -17,6 +17,7 @@ import Home from './pages/home';
 import Issues from './pages/issues';
 import Meeting from './pages/meeting';
 import MilestoneProgress from './pages/milestones';
+import Report from './pages/report';
 import StudentDetails from './pages/student/studentDetails';
 import Report from './pages/report'; 
 
@@ -56,6 +57,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;

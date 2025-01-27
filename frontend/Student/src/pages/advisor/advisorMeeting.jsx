@@ -6,7 +6,7 @@ const AdvisorDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const advisorId = "advisor123"; // Replace with dynamic advisor ID if needed
+  const advisorId = "advisor2"; // Replace with dynamic advisor ID if needed
 
   useEffect(() => {
     const fetchRequests = async () => {
