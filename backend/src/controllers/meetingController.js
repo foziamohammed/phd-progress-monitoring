@@ -38,40 +38,48 @@ exports.getAdvisorRequests = async (req, res) => {
         const requests = await meetingService.getRequestsByAdvisor(advisorId);
         res.status(200).json({ requests });
     } catch (error) {
-        console.error('Error fetching meeting requests:', error);
-        res.status(500).json({ message: 'Server error' });
+      console.error('Error fetching meeting requests:', error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };
 
-exports.approveMeetingRequest = async (req, res) => {
+  exports.approveMeetingRequest = async (req, res) => {
     const { id } = req.params;
-
+  
     try {
-        const updatedRequest = await meetingService.approveRequest(id);
-        if (!updatedRequest) {
-            return res.status(404).json({ message: 'Meeting request not found' });
-        }
-        res.status(200).json({ message: 'Meeting request approved', request: updatedRequest });
+      const updatedRequest = await MeetingRequest.findByIdAndUpdate(
+        id,
+        { status: 'approved' },
+        { new: true }
+      );
+      if (!updatedRequest) {
+        return res.status(404).json({ message: 'Meeting request not found' });
+      }
+      res.status(200).json({ message: 'Meeting request approved', request: updatedRequest });
     } catch (error) {
-        console.error('Error approving meeting request:', error);
-        res.status(500).json({ message: 'Server error' });
+      console.error('Error approving meeting request:', error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };
 
-exports.declineMeetingRequest = async (req, res) => {
+  exports.declineMeetingRequest = async (req, res) => {
     const { id } = req.params;
-
+  
     try {
-        const meetingRequest = await meetingService.declineRequest(id);
-        if (!meetingRequest) {
-            return res.status(404).json({ message: 'Meeting request not found' });
-        }
-        res.status(200).json({ message: 'Meeting request declined', request: meetingRequest });
+      const updatedRequest = await MeetingRequest.findByIdAndUpdate(
+        id,
+        { status: 'declined' },
+        { new: true }
+      );
+      if (!updatedRequest) {
+        return res.status(404).json({ message: 'Meeting request not found' });
+      }
+      res.status(200).json({ message: 'Meeting request declined', request: updatedRequest });
     } catch (error) {
-        console.error('Error declining meeting request:', error);
-        res.status(500).json({ message: 'Server error' });
+      console.error('Error declining meeting request:', error);
+      res.status(500).json({ message: 'Server error' });
     }
-};
+  };
 
 
 // Get approved meetings for a specific advisor
@@ -106,16 +114,16 @@ exports.getAdvisorSchedules = async (req, res) => {
 // Get approved meetings for a specific student
 exports.getStudentSchedules = async (req, res) => {
     const { studentId } = req.params;
-
+  
     try {
-        const schedules = await MeetingRequest.find({ studentId, status: 'approved' });
-        if (!schedules.length) {
-            return res.status(404).json({ message: 'No schedules found for this student.' });
-        }
-        res.status(200).json({ message: 'Schedules retrieved successfully.', schedules });
+      const schedules = await MeetingRequest.find({ studentId, status: "approved" });
+      if (!schedules.length) {
+        return res.status(404).json({ message: "No schedules found for this student." });
+      }
+      res.status(200).json(schedules);
     } catch (err) {
-        console.error('Error retrieving student schedules:', err);
-        res.status(500).json({ message: 'Server error while retrieving student schedules.' });
+      console.error("Error retrieving student schedules:", err);
+      res.status(500).json({ message: "Server error while retrieving student schedules." });
     }
 };
 
