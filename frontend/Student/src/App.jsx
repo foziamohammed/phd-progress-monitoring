@@ -6,11 +6,12 @@ import AdvisorHome from './pages/advisor/advisorHome';
 import AdvisorMeeting from './pages/advisor/advisorMeeting';
 import AdvisorReport from './pages/advisor/advisorReport';
 import AdvisorStudents from './pages/advisor/advisorStudents';
-import Home from './pages/home';
 import Issues from './pages/issues';
 import Meeting from './pages/meeting';
 import MilestoneProgress from './pages/milestones';
+import Report from './pages/report';
 import StudentDetails from './pages/student/studentDetails';
+
 
 function App() {
   const [role, setRole] = useState('student'); // Dynamically set this role (e.g., after login)
@@ -27,11 +28,11 @@ function App() {
             {/* Routes for student */}
             {role === 'student' && (
               <>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Report />} />
                 <Route path="/issues" element={<Issues />} />
                 <Route path="/meeting" element={<Meeting />} />
                 <Route path="/milestones" element={<MilestoneProgress />} />
-                
+
               </>
             )}
 
@@ -43,6 +44,7 @@ function App() {
                 <Route path="/advisor/students" element={<AdvisorStudents />} />
                 <Route path="/advisor/student-details/:studentId" element={<StudentDetails />} />
                 <Route path="/advisor/document" element={<AdvisorReport />} />
+
               </>
             )}
           </Routes>
@@ -50,6 +52,6 @@ function App() {
       </div>
     </Router>
   );
-}
+};
 
 export default App;
